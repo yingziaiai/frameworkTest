@@ -2,6 +2,11 @@ package com.rpc.function;
 //http://blog.csdn.net/benluobobo/article/details/52232179
 //http://www.cnblogs.com/wscit/p/6040823.html
 //http://www.tuicool.com/articles/INFfUbJ
+
+//另一个也挺好的自己实现的RPC：http://jbm3072.iteye.com/blog/1088102
+//以下是改进：http://www.cnblogs.com/codingexperience/p/5930752.html
+//https://www.zhihu.com/question/25536695
+//基于XML的实现：http://www.cnblogs.com/flyoung2008/archive/2011/11/12/2246282.html
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationHandler;
@@ -85,7 +90,7 @@ public class RpcFramework {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T refer(Class<T> interfaceClass, final String host, final int port)
+	public static <T> T refer(final Class<T> interfaceClass, final String host, final int port)
 			throws Exception {
 		if (interfaceClass == null) {
 			throw new IllegalAccessException("Interface class == null");
@@ -114,6 +119,8 @@ public class RpcFramework {
 									socket.getOutputStream());
 
 							try {
+								output.writeUTF(interfaceClass.getName());
+							
 								output.writeUTF(method.getName());
 								output.writeObject(method.getParameterTypes());
 								output.writeObject(args);
